@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style> 
+    body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvitica, Arial, Helvetica, sans-serif;
+    }
+    #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.5rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+    }
+    #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 5rem;
+    }
+    #input:focus {
+        outline: none;
+    }
+    #form > button {
+        background: #333;
+        border: none;
+        padding: 0.25rem 1rem;
+        margin-left: 0.25rem;
+        border-radius: 5rem;
+        outline: none;
+        color: #fff;
+    }
+    #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+    #messages > li {
+        padding: 0.5rem 1rem;
+    }
+    #messages > li:nth-child(odd){
+        background: #efefef;
+    }
+    </style>
+</head>
+<body>
+    <ul id="messages">
+        <li>Chat</li>
+     </ul>
+     <form id="form" action ="">
+        <input type="text" id="input" autocomplete="off" placeholder="Digite sua mensagem" />
+        <button>Send</button>
+     </form>
+    
+     <script src="/socket.io/socket.io.js"></script>
+     <script>
+        var socket = io();
+        const message = document.getElementById('messages')
+        const input = document.getElementById('input')
+
+        document.addEventListener('submit', (e)=>{
+            e.preventDefault()
+            if(input.value){
+                socket.emit('message', input.value);
+                input.value = " ";
+            }
+        })
+
+        
+        socket.on('message', (msg) =>{
+            let li = document.createElement('li')
+            li.textContent = msg
+            message.appendChild(li)
+        })
+     </script>
+</body>
+</html>
